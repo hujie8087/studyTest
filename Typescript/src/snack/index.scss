@@ -1,0 +1,66 @@
+$bg-color:#b7d4a8;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#snake-main {
+    width: 360px;
+    height: 420px;
+    border: 10px solid #000;
+    border-radius: 10px;
+    background-color: $bg-color;
+    margin: 50px auto;
+
+    #stage {
+        border: 2px solid #000;
+        width: 304px;
+        height: 304px;
+        margin: 20px auto;
+        position: relative;
+
+        #snake {
+            position: relative;
+            width: 10px;
+            height: 10px;
+
+            &>div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: #000;
+                border: 1px solid $bg-color;
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        #food {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 40px;
+            left: 100px;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            align-content: space-between;
+
+            &>div {
+                width: 4px;
+                height: 4px;
+                background-color: #000;
+                transform: rotate(45deg);
+            }
+        }
+    }
+
+    #score-panel {
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
