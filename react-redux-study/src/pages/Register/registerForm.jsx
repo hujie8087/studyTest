@@ -1,33 +1,31 @@
-import React from "react";
-import { Form, Input, Button } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, message } from "antd";
+import { withRouter } from 'react-router-dom'
 
 function RegisterForm(props) {
   const [form] = Form.useForm(); //实例化表单
-
+  const [loading, setLoading] = useState(false)
   // 提交成功
   const onFinish = (values) => {
-    props.registerActions.registerRequest(values);
+    setLoading(true);
+    props.registerActions.registerRequest(values).then((res) => {
+      setLoading(false)
+      if (res.data.code===200) {
+        message.success(res.data.message)
+        props.history.push('/');
+      }
+    });
   };
   // 提交失败npm
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  // 验证二次密码
-  const checkPsd = (rule, value, callback) => {
-    const password = form.getFieldValue("password");
-    if (!value || value === password) {
-      return callback();
-    } else {
-      return callback(new Error("输入的两次密码不匹配！"));
-    }
-  };
   return (
     // validateTrigger 设置验证时机
     <Form
       form={form}
       name='register'
-      initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       validateTrigger='onBlur'
@@ -72,18 +70,22 @@ function RegisterForm(props) {
         name='confirm'
         rules={[
           { required: true, message: "请确认您的密码!" },
-          {
-            validator: (rule, value, callback) => {
-              checkPsd(rule, value, callback);
-            },
-          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('输入的两次密码不匹配!'))
+            }
+          })
+          ,
         ]}
       >
         <Input.Password placeholder='请确认您的密码' />
       </Form.Item>
 
       <Form.Item>
-        <Button type='primary' htmlType='submit' style={{ width: "100%" }}>
+        <Button type='primary' htmlType='submit' style={{ width: "100%" }} loading={loading} >
           注册
         </Button>
       </Form.Item>
@@ -91,4 +93,4 @@ function RegisterForm(props) {
   );
 }
 
-export default RegisterForm;
+export default withRouter(RegisterForm);

@@ -1,15 +1,15 @@
 import React from "react";
 import RegisterForm from "./registerForm";
 import * as registerActions from "../../actions/registerActions";
-import "./index.less";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import "./index.less";
 
-function Register() {
+function Register(props) {
   return (
     <div className='form-content'>
       <h2 className='text-center'>注册</h2>
-      <RegisterForm registerActions={registerActions} />
+      <RegisterForm registerActions={props.registerActions} />
     </div>
   );
 }
