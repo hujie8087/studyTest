@@ -1,24 +1,36 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { withRouter } from 'react-router-dom'
+import { withRouter } from "react-router-dom";
 
 function RegisterForm(props) {
   const [form] = Form.useForm(); //实例化表单
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   // 提交成功
   const onFinish = (values) => {
     setLoading(true);
     props.registerActions.registerRequest(values).then((res) => {
-      setLoading(false)
-      if (res.data.code===200) {
-        message.success(res.data.message)
-        props.history.push('/');
+      setLoading(false);
+      if (res.data.code === 200) {
+        message.success(res.data.message);
+        props.history.push("/");
       }
     });
   };
   // 提交失败npm
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+
+  const isNameExiste = (rule, value, callback) => {
+    if (value) {
+      props.registerActions.isUserExists(value).then((res) => {
+        if (res.data.code === 200 && res.data.success) {
+          callback();
+        } else {
+          callback(new Error(res.data.message));
+        }
+      });
+    }
   };
 
   return (
@@ -33,7 +45,12 @@ function RegisterForm(props) {
       <Form.Item
         label=''
         name='username'
-        rules={[{ required: true, message: "请输入您的用户名!" }]}
+        rules={[
+          { required: true, message: "请输入您的用户名!" },
+          {
+            validator: isNameExiste,
+          },
+        ]}
       >
         <Input placeholder='请输入您的用户名' />
       </Form.Item>
@@ -72,20 +89,24 @@ function RegisterForm(props) {
           { required: true, message: "请确认您的密码!" },
           ({ getFieldValue }) => ({
             validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
+              if (!value || getFieldValue("password") === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('输入的两次密码不匹配!'))
-            }
-          })
-          ,
+              return Promise.reject(new Error("输入的两次密码不匹配!"));
+            },
+          }),
         ]}
       >
         <Input.Password placeholder='请确认您的密码' />
       </Form.Item>
 
       <Form.Item>
-        <Button type='primary' htmlType='submit' style={{ width: "100%" }} loading={loading} >
+        <Button
+          type='primary'
+          htmlType='submit'
+          style={{ width: "100%" }}
+          loading={loading}
+        >
           注册
         </Button>
       </Form.Item>
