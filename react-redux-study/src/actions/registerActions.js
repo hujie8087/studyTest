@@ -1,13 +1,13 @@
-import axios from "axios";
+import ajax from "../common/ajax";
 
 export const registerRequest = (userData) => {
   return (dispatch) => {
-    return axios.post("/api/users", userData);
+    return ajax.post("/api/users", userData);
   };
 };
 
 export const isUserExists = (username) => {
   return (dispatch) => {
-    return axios.get(`/api/users/${username}`);
+    return ajax.get(`/api/users/${username}`);
   };
 };

@@ -1,17 +1,10 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox } from "antd";
 import { withRouter } from "react-router-dom";
 
 function LoginForm(props) {
   const onFinish = (values) => {
-    props.loginActions.login(values).then((res) => {
-      if (res.data.code === 200) {
-        message.success(res.data.message || "登录成功");
-        props.history.push("/");
-      } else {
-        message.error(res.data.message || "用户名密码错误");
-      }
-    });
+    props.loginActions.login(values);
   };
 
   return (

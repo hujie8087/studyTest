@@ -10,8 +10,8 @@ function RegisterForm(props) {
     setLoading(true);
     props.registerActions.registerRequest(values).then((res) => {
       setLoading(false);
-      if (res.data.code === 200) {
-        message.success(res.data.message);
+      if (res.status === 200) {
+        message.success(res.message);
         props.history.push("/");
       }
     });
@@ -24,10 +24,10 @@ function RegisterForm(props) {
   const isNameExiste = (rule, value, callback) => {
     if (value) {
       props.registerActions.isUserExists(value).then((res) => {
-        if (res.data.code === 200 && res.data.success) {
+        if (res.status === 200 && res.success) {
           callback();
         } else {
-          callback(new Error(res.data.message));
+          callback(new Error(res.message));
         }
       });
     }
